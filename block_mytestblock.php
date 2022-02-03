@@ -51,9 +51,6 @@ class block_mytestblock extends block_base
                 $a = $_POST['a'];
                 $b = $_POST['b'];
                 $c = $_POST['c'];
-                $this->content->text .= $a;
-                $this->content->text .= $b;
-                $this->content->text .= $c;
                 $this->content->footer .= "Уравнение: $a * x² + ($b) * x + $c = 0; \n";
 
                 if (!isset($a) or !isset($b) or !isset($c)) {
