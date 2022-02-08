@@ -31,16 +31,6 @@ class block_mytestblock extends block_base
         $this->title = get_string('pluginname', 'block_mytestblock');
     }
 
-//    function has_config()
-//    {
-//        return true;
-//    }
-//
-//    public function hide_header()
-//    {
-//        return true;
-//    }
-
     function get_content()
     {
         global $DB, $OUTPUT, $PAGE, $COURSE;
@@ -103,28 +93,6 @@ class block_mytestblock extends block_base
         return $this->content;
 
     }
-//
-//    public function specialization()
-//    {
-//        if (isset($this->config)) {
-//            if (empty($this->config->title)) {
-//                $this->title = get_string('defaulttitle', 'block_mytestblock');
-//            } else {
-//                $this->title = $this->config->title;
-//            }
-//
-//            if (empty($this->config->text)) {
-//                $this->config->text = get_string('defaulttext', 'block_mytestblock');
-//            }
-//        }
-//    }
-//
-//    public function html_attributes()
-//    {
-//        $attributes = parent::html_attributes(); // Get default values
-//        $attributes['class'] .= ' block_' . $this->name(); // Append our class to class attribute
-//        return $attributes;
-//    }
 
 
 }
