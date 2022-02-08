@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/mytestblock/db" VERSION="20220207" COMMENT="XMLDB file for Moodle blocks/mytestblock"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_mytestblock" COMMENT="Default comment for block_mytestblock, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="a" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="b" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="c" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="d" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false" DECIMALS="3"/>
+        <FIELD NAME="x1" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false" DECIMALS="3"/>
+        <FIELD NAME="x2" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false" DECIMALS="3"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

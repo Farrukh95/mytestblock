@@ -19,6 +19,10 @@
  * @package   block_mytestblock
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+require_once('simplehtml_form.php');
+
+
 class block_mytestblock extends block_base
 {
 
@@ -27,59 +31,100 @@ class block_mytestblock extends block_base
         $this->title = get_string('pluginname', 'block_mytestblock');
     }
 
+//    function has_config()
+//    {
+//        return true;
+//    }
+//
+//    public function hide_header()
+//    {
+//        return true;
+//    }
 
     function get_content()
     {
-
-        if ($this->content !== NULL) {
-            return $this->content;
+        global $DB, $OUTPUT, $PAGE, $COURSE;
+        if (!empty ($this->config->text)) {
+            $this->content->text .= $this->config->text;
         }
-        $form = "<h4>a * x<sup>2</sup> + b * x + с = 0</h4>";
-        $form .= "<form action='' method='post'>";
-        $form .= "  <p>Введите a: <input required type='number' name='a'></p>";
-        $form .= "  <p>Введите b: <input required type='number' name='b'></p>";
-        $form .= "  <p>Введите c: <input required type='number' name='c' value='0'></p>";
-        $form .= "  <input type='submit' name='sub'>";
-        $form .= "  <input type='reset'>";
-        $form .= "</form>";
+
 
         $this->content = new stdClass;
-        $this->content->text = $form;
 
-        if (isset($_POST['sub'])) {
-            if (isset($_POST['a']) && isset($_POST['b']) && isset($_POST['c'])) {
-                $a = $_POST['a'];
-                $b = $_POST['b'];
-                $c = $_POST['c'];
-                $this->content->footer .= "Уравнение: $a * x² + ($b) * x + $c = 0; \n";
+        $this->content->text .= '';
+        $this->content->text .= "Уравнение: A*x² + B * x + C = 0";
+        $mform = new simplehtml_form();
 
-                if (!isset($a) or !isset($b) or !isset($c)) {
-                    $this->content->footer .= "Пожалуйста, введите все значения выше!";
-                } elseif ($a == 0) {
-                    $this->content->footer .= "Ответ: Уравнение не квадратное! \n";
-                } else {
+        $table = 'block_mytestblock';
+        $courseurl = new moodle_url('/my/');
 
-                    $d = (pow($b, 2)) - (4 * $a * $c);
+        //Form processing and displaying is done here
+        if ($mform->is_cancelled()) {
+            redirect($courseurl);
+        } else if ($fromform = $mform->get_data()) {
 
-                    if ($d < 0) {
-                        $this->content->footer .= "Корней нет \n";
-                    } elseif ($d > 0) {
-                        $x1 = round((($b * -1) + sqrt(pow($b, 2) - 4 * $a * $c)) / (2 * $a), 3);
-                        $x2 = round((($b * -1) - sqrt(pow($b, 2) - 4 * $a * $c)) / (2 * $a), 3);
-                        $this->content->footer .= "Ответ: x1 = $x1, x2 = $x2 \n";
-                    } elseif ($d == 0) {
-                        $x = round((($b * -1) + sqrt(pow($b, 2) - 4 * $a * $c)) / (2 * $a), 3);
-                        $this->content->footer .= "Ответ: x = $x \n";
-                    }
-                }
+            $a = $fromform->a;
+            $b = $fromform->b;
+            $c = $fromform->c;
+            $d = (pow($b, 2)) - (4 * $a * $c);
+            if ($d < 0) {
+                $this->content->text .= $mform->render();
+                $this->content->text .= "<p style='text-align: center; color: red'>Корней нет</p>";
 
+            } elseif ($d > 0) {
+                $x1 = round((-$b + sqrt($d)) / (2 * $a), 3);
+                $x2 = round((-$b - sqrt($d)) / (2 * $a), 3);
+            } elseif ($d == 0) {
+                $x1 = (-$b + sqrt($d)) / (2 * $a);
             }
+
+            $rows = array('a' => $a, 'b' => $b, 'c' => $c, 'd' => $d, 'x1' => $x1, 'x2' => $x2);
+
+            $DB->insert_record($table, $rows);
+            $courseurl = new moodle_url('/my/');
+            redirect($courseurl);
+
+        } else {
+            // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+            // or on the first display of the form.
+            //Set default data (if any)
+            $mform->set_data($mform);
+            //displays the form
+            $this->content->text .= $mform->render();
         }
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/blocks/mytestblock/hist/history.txt';
-        file_put_contents($file, $this->content->footer, FILE_APPEND | LOCK_EX);
+
+
+// The other code.
+
+        $url = new moodle_url('/blocks/mytestblock/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+        $this->content->footer .= html_writer::link($url, 'Посмотреть историю');
+
+
         return $this->content;
 
     }
+//
+//    public function specialization()
+//    {
+//        if (isset($this->config)) {
+//            if (empty($this->config->title)) {
+//                $this->title = get_string('defaulttitle', 'block_mytestblock');
+//            } else {
+//                $this->title = $this->config->title;
+//            }
+//
+//            if (empty($this->config->text)) {
+//                $this->config->text = get_string('defaulttext', 'block_mytestblock');
+//            }
+//        }
+//    }
+//
+//    public function html_attributes()
+//    {
+//        $attributes = parent::html_attributes(); // Get default values
+//        $attributes['class'] .= ' block_' . $this->name(); // Append our class to class attribute
+//        return $attributes;
+//    }
 
 
 }
